@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.myapp.internshalaintenrshiptask">
 
+  <uses-permission android:name="android.permission.INTERNET"/>
+
   <application
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
@@ -9,9 +11,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/Theme.InternshalaIntenrshipTask">
-    <activity
-      android:name=".activity.NotesActivity"
-      android:exported="true" />
+
     <activity
       android:name=".activity.MainActivity"
       android:exported="true">

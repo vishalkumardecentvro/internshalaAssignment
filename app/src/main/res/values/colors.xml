@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="success">#4FCF55</color>
   <color name="brand_color_light">#99ccff</color>
   <color name="brand_color_dark">#4da6ff</color>
   <color name="purple_200">#FFBB86FC</color>

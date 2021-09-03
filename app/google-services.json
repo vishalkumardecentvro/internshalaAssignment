@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1064690025631",
+    "project_id": "notes-database-e715f",
+    "storage_bucket": "notes-database-e715f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064690025631:android:51ad32d66464f94c010eaa",
+        "android_client_info": {
+          "package_name": "com.myapp.internshalaintenrshiptask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1064690025631-ba48kvktgsffqsd17464fh3t0modjoru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7Pj85S0Uhgy_2YQoXo5nS3mdl2jpSMio"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064690025631-ba48kvktgsffqsd17464fh3t0modjoru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
