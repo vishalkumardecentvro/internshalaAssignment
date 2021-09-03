@@ -1,5 +1,7 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -96,8 +98,14 @@ public class CreateNoteFragment extends Fragment {
   }
 
   private void saveNote() {
+    SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+    String name = authSharedPref.getString("name","");
+    String accountId = authSharedPref.getString("accountId","");
+
     HashMap<String, String> noteHash = new HashMap();
     noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
+    noteHash.put("accountId", accountId);
+    noteHash.put("name",name);
 
     firestore.collection("notes").add(noteHash).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
       @Override
@@ -108,14 +116,14 @@ public class CreateNoteFragment extends Fragment {
     }).addOnFailureListener(new OnFailureListener() {
       @Override
       public void onFailure(@NonNull Exception e) {
-        Toast.makeText(getContext(), "Failed to save note", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Failed to save note!", Toast.LENGTH_SHORT).show();
       }
     });
   }
 
   private void processUpdateNote(){
     if (binding.tilNotes.getEditText().getText().toString().trim().isEmpty()) {
-      Toast.makeText(getContext(), "Please enter note body", Toast.LENGTH_SHORT).show();
+      Toast.makeText(getContext(), "Please enter note body!", Toast.LENGTH_SHORT).show();
       return;
     } else
       updateNote();
@@ -133,7 +141,7 @@ public class CreateNoteFragment extends Fragment {
     }).addOnFailureListener(new OnFailureListener() {
       @Override
       public void onFailure(@NonNull Exception e) {
-        Log.i("--updateEror--",e.toString());
+        Toast.makeText(getContext(), "Failed to update note!", Toast.LENGTH_SHORT).show();
       }
     });
   }

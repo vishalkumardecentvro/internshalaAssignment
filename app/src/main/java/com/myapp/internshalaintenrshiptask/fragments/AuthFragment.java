@@ -1,6 +1,5 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
-import static com.myapp.internshalaintenrshiptask.utils.Utils.authSharedPref;
 import static com.myapp.internshalaintenrshiptask.utils.Utils.signIn;
 
 import android.content.Context;
@@ -29,7 +28,6 @@ import com.myapp.internshalaintenrshiptask.databinding.FragmentAuthBinding;
 import com.myapp.internshalaintenrshiptask.utils.Utils;
 
 public class AuthFragment extends Fragment {
-  private static SharedPreferences authSharedPreferences;
   private FragmentAuthBinding binding;
   private GoogleSignInOptions gso;
   private GoogleSignInClient googleSignInClient;
@@ -66,7 +64,6 @@ public class AuthFragment extends Fragment {
             .requestEmail()
             .build();
     googleSignInClient = GoogleSignIn.getClient(getContext(), gso);
-    authSharedPreferences = getContext().getSharedPreferences(authSharedPref, Context.MODE_PRIVATE);
   }
 
   private void initialize() {
@@ -100,17 +97,19 @@ public class AuthFragment extends Fragment {
   private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
     try {
       GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-      Log.i("--email--", account.getEmail());
-      Log.i("--name--", account.getDisplayName());
-      SharedPreferences.Editor editor = authSharedPreferences.edit();
+
+      SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+      SharedPreferences.Editor editor = authSharedPref.edit();
+
       editor.putString("email", account.getEmail());
       editor.putString("name", account.getDisplayName());
+      editor.putString("accountId", account.getId());
       editor.putString("status", signIn);
+
       editor.apply();
 
       NotesFragment notesFragment = new NotesFragment();
       navigateToNotesFragment(notesFragment);
-
 
     } catch (ApiException e) {
       Log.w("Main", "signInResult:failed code=" + e.getStatusCode());
@@ -118,10 +117,12 @@ public class AuthFragment extends Fragment {
   }
 
   private void navigateToNotesFragment(NotesFragment notesFragment) {
+
     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
     fragmentTransaction.replace(R.id.nav_host_fragment, notesFragment);
     fragmentTransaction.addToBackStack(null);
+
     fragmentTransaction.commit();
   }
 }

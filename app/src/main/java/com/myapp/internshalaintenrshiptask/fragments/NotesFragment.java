@@ -1,5 +1,7 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,7 +123,10 @@ public class NotesFragment extends Fragment {
   }
 
   private void load() {
-    firestore.collection("notes").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+    String accountId = authSharedPref.getString("accountId","");
+
+    firestore.collection("notes").whereEqualTo("accountId",accountId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
       @Override
       public void onComplete(@NonNull Task<QuerySnapshot> task) {
         noteList = new ArrayList<>();
