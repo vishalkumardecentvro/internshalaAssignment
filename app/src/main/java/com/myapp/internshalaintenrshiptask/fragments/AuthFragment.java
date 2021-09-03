@@ -31,6 +31,7 @@ public class AuthFragment extends Fragment {
   private FragmentAuthBinding binding;
   private GoogleSignInOptions gso;
   private GoogleSignInClient googleSignInClient;
+  private NotesFragment notesFragment;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,10 @@ public class AuthFragment extends Fragment {
   }
 
   private void instantiate() {
+    notesFragment = new NotesFragment();
+
+    checkIfSignedIn();
+
     gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build();
@@ -94,6 +99,16 @@ public class AuthFragment extends Fragment {
     }
   }
 
+  private void checkIfSignedIn() {
+    SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+    String status = authSharedPref.getString("status", "");
+    if (!status.isEmpty()) {
+      if (status.equals(signIn)) {
+        navigateToNotesFragment(notesFragment);
+      }
+    }
+  }
+
   private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
     try {
       GoogleSignInAccount account = completedTask.getResult(ApiException.class);
@@ -108,7 +123,6 @@ public class AuthFragment extends Fragment {
 
       editor.apply();
 
-      NotesFragment notesFragment = new NotesFragment();
       navigateToNotesFragment(notesFragment);
 
     } catch (ApiException e) {

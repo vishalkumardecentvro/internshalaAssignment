@@ -1,9 +1,13 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -14,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,9 +29,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.myapp.internshalaintenrshiptask.R;
+import com.myapp.internshalaintenrshiptask.activity.MainActivity;
 import com.myapp.internshalaintenrshiptask.adapter.NotesAdapter;
 import com.myapp.internshalaintenrshiptask.databinding.FragmentNotesBinding;
 import com.myapp.internshalaintenrshiptask.modalclass.Notes;
+import com.myapp.internshalaintenrshiptask.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +44,29 @@ public class NotesFragment extends Fragment {
   private List<Notes> noteList;
   private NotesAdapter notesAdapter;
   private CreateNoteFragment createNoteFragment;
+  private GoogleSignInClient googleSignInClient;
+  private GoogleSignInOptions gso;
 
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    getActivity().getMenuInflater().inflate(R.menu.log_out_menu,menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    switch(item.getItemId()){
+      case R.id.logOut:
+        logout();
+        break;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
@@ -73,6 +100,11 @@ public class NotesFragment extends Fragment {
 
     noteList = new ArrayList<>();
     notesAdapter = new NotesAdapter();
+
+    gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build();
+    googleSignInClient = GoogleSignIn.getClient(getContext(), gso);
   }
 
   private void initialize() {
@@ -162,5 +194,18 @@ public class NotesFragment extends Fragment {
     fragmentTransaction.addToBackStack(null);
 
     fragmentTransaction.commit();
+  }
+
+  private void logout(){
+    googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+      @Override
+      public void onComplete(@NonNull Task<Void> task) {
+        SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = authSharedPref.edit();
+        editor.putString("status", Utils.signOut).apply();
+
+        startActivity(new Intent(getContext(), MainActivity.class));
+      }
+    });
   }
 }
