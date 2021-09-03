@@ -5,11 +5,8 @@ import android.content.SharedPreferences;
 
 public class Utils {
   public static int RC_SIGN_IN = 111;
-  public static String editor = "authSharedPreference";
-  public static String signIn = "SIGNED_IN";
-  public static String signOut = "SIGNED_OUT";
+  public static String SIGNED_IN = "signed_in";
+  public static String SIGNED_OUT = "signed_out";
+  public static String EMAIL = "email",NAME="name",ACCOUNT_ID="accountID",STATUS="status";
 
-  public static void saveAuth(Context context){
-
-  }
 }

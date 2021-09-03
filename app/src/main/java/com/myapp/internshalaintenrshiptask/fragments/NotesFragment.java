@@ -95,7 +95,7 @@ public class NotesFragment extends Fragment {
     getActivity().setTitle("Notes");
 
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-    String name = authSharedPref.getString("name", "");
+    String name = authSharedPref.getString(Utils.NAME, "");
     binding.tvName.setText(name);
 
     firestore = FirebaseFirestore.getInstance();
@@ -160,7 +160,7 @@ public class NotesFragment extends Fragment {
 
   private void load() {
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-    String accountId = authSharedPref.getString("accountId","");
+    String accountId = authSharedPref.getString(Utils.ACCOUNT_ID,"");
 
     firestore.collection("notes").whereEqualTo("accountId",accountId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
       @Override
@@ -206,7 +206,7 @@ public class NotesFragment extends Fragment {
       public void onComplete(@NonNull Task<Void> task) {
         SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = authSharedPref.edit();
-        editor.putString("status", Utils.signOut).apply();
+        editor.putString(Utils.STATUS, Utils.SIGNED_OUT).apply();
 
         startActivity(new Intent(getContext(), MainActivity.class));
       }

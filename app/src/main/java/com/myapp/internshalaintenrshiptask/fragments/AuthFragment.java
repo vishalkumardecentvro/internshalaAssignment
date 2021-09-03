@@ -1,6 +1,6 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
-import static com.myapp.internshalaintenrshiptask.utils.Utils.signIn;
+import static com.myapp.internshalaintenrshiptask.utils.Utils.SIGNED_IN;
 
 import android.content.Context;
 import android.content.Intent;
@@ -101,9 +101,9 @@ public class AuthFragment extends Fragment {
 
   private void checkIfSignedIn() {
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-    String status = authSharedPref.getString("status", "");
+    String status = authSharedPref.getString(Utils.STATUS, "");
     if (!status.isEmpty()) {
-      if (status.equals(signIn)) {
+      if (status.equals(SIGNED_IN)) {
         navigateToNotesFragment(notesFragment);
       }
     }
@@ -116,10 +116,10 @@ public class AuthFragment extends Fragment {
       SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
       SharedPreferences.Editor editor = authSharedPref.edit();
 
-      editor.putString("email", account.getEmail());
-      editor.putString("name", account.getDisplayName());
-      editor.putString("accountId", account.getId());
-      editor.putString("status", signIn);
+      editor.putString(Utils.EMAIL, account.getEmail());
+      editor.putString(Utils.NAME, account.getDisplayName());
+      editor.putString(Utils.ACCOUNT_ID, account.getId());
+      editor.putString(Utils.STATUS, SIGNED_IN);
 
       editor.apply();
 

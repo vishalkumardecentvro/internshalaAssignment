@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.myapp.internshalaintenrshiptask.databinding.FragmentCreateNoteBinding;
+import com.myapp.internshalaintenrshiptask.utils.Utils;
 
 import java.util.HashMap;
 
@@ -101,8 +102,8 @@ public class CreateNoteFragment extends Fragment {
 
   private void saveNote() {
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-    String name = authSharedPref.getString("name", "");
-    String accountId = authSharedPref.getString("accountId", "");
+    String name = authSharedPref.getString(Utils.NAME, "");
+    String accountId = authSharedPref.getString(Utils.ACCOUNT_ID, "");
 
     HashMap<String, String> noteHash = new HashMap();
     noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
