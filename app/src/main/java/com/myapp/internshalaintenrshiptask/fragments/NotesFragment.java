@@ -94,6 +94,10 @@ public class NotesFragment extends Fragment {
   private void instantiate() {
     getActivity().setTitle("Notes");
 
+    SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+    String name = authSharedPref.getString("name", "");
+    binding.tvName.setText(name);
+
     firestore = FirebaseFirestore.getInstance();
 
     createNoteFragment = new CreateNoteFragment();

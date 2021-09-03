@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -8,20 +8,44 @@
   android:padding="10dp"
   tools:context=".fragments.NotesFragment">
 
-  <Button
-    android:id="@+id/createNoteButton"
-    android:layout_width="150dp"
+  <LinearLayout
+    android:id="@+id/llTextAndButton"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
     android:layout_marginBottom="10dp"
-    android:text="Create note" />
+    android:orientation="horizontal">
+
+    <TextView
+      android:id="@+id/tvName"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_margin="5dp"
+      android:textColor="@color/black"
+      android:layout_weight="1"
+      android:padding="5dp"
+      android:text="Create "
+      android:textStyle="bold"
+      android:textSize="16sp" />
+
+    <Button
+      android:id="@+id/createNoteButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_margin="5dp"
+      android:layout_weight="1"
+      android:text="Create note" />
+
+  </LinearLayout>
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/rvNotes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_below="@id/llTextAndButton"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:reverseLayout="false"
     tools:listitem="@layout/rv_notes" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -3,7 +3,6 @@ package com.myapp.internshalaintenrshiptask.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,7 +49,10 @@ public class CreateNoteFragment extends Fragment {
   }
 
   private void instantiate() {
-    getActivity().setTitle("Create notes");
+    if (editMode)
+      getActivity().setTitle("Update note");
+    else
+      getActivity().setTitle("Create note");
 
     bundle = getArguments();
     if (bundle != null && bundle.containsKey("content"))
@@ -58,17 +61,18 @@ public class CreateNoteFragment extends Fragment {
 
   private void initialize() {
     firestore = FirebaseFirestore.getInstance();
+
     if (editMode) {
       binding.tilNotes.getEditText().setText(bundle.getString("content"));
     }
-
   }
 
   private void listen() {
     binding.cancelButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.popBackStack();
       }
     });
 
@@ -81,11 +85,9 @@ public class CreateNoteFragment extends Fragment {
           processSaveNote();
       }
     });
-
   }
 
   private void load() {
-
 
   }
 
@@ -99,18 +101,19 @@ public class CreateNoteFragment extends Fragment {
 
   private void saveNote() {
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-    String name = authSharedPref.getString("name","");
-    String accountId = authSharedPref.getString("accountId","");
+    String name = authSharedPref.getString("name", "");
+    String accountId = authSharedPref.getString("accountId", "");
 
     HashMap<String, String> noteHash = new HashMap();
     noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
     noteHash.put("accountId", accountId);
-    noteHash.put("name",name);
+    noteHash.put("name", name);
 
     firestore.collection("notes").add(noteHash).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
       @Override
       public void onSuccess(DocumentReference documentReference) {
-        Toast.makeText(getContext(), "Note saved", Toast.LENGTH_SHORT).show();
+        binding.tilNotes.getEditText().setText("");
+        Toast.makeText(getContext(), "Note saved.", Toast.LENGTH_SHORT).show();
 
       }
     }).addOnFailureListener(new OnFailureListener() {
@@ -119,9 +122,10 @@ public class CreateNoteFragment extends Fragment {
         Toast.makeText(getContext(), "Failed to save note!", Toast.LENGTH_SHORT).show();
       }
     });
+
   }
 
-  private void processUpdateNote(){
+  private void processUpdateNote() {
     if (binding.tilNotes.getEditText().getText().toString().trim().isEmpty()) {
       Toast.makeText(getContext(), "Please enter note body!", Toast.LENGTH_SHORT).show();
       return;
@@ -129,14 +133,14 @@ public class CreateNoteFragment extends Fragment {
       updateNote();
   }
 
-  private void updateNote(){
+  private void updateNote() {
     HashMap<String, Object> noteHash = new HashMap();
     noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
 
     firestore.collection("notes").document(bundle.getString("id")).update(noteHash).addOnSuccessListener(new OnSuccessListener<Void>() {
       @Override
       public void onSuccess(Void unused) {
-        Toast.makeText(getContext(), "Note updated", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Note updated.", Toast.LENGTH_SHORT).show();
       }
     }).addOnFailureListener(new OnFailureListener() {
       @Override
@@ -144,5 +148,6 @@ public class CreateNoteFragment extends Fragment {
         Toast.makeText(getContext(), "Failed to update note!", Toast.LENGTH_SHORT).show();
       }
     });
+
   }
 }
