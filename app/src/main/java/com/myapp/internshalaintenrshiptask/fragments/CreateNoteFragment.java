@@ -50,14 +50,15 @@ public class CreateNoteFragment extends Fragment {
   }
 
   private void instantiate() {
-    if (editMode)
-      getActivity().setTitle("Update note");
-    else
-      getActivity().setTitle("Create note");
 
     bundle = getArguments();
     if (bundle != null && bundle.containsKey("content"))
       editMode = true;
+
+    if (editMode)
+      getActivity().setTitle("Update note");
+    else
+      getActivity().setTitle("Create note");
   }
 
   private void initialize() {
@@ -107,8 +108,8 @@ public class CreateNoteFragment extends Fragment {
 
     HashMap<String, String> noteHash = new HashMap();
     noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
-    noteHash.put("accountId", accountId);
-    noteHash.put("name", name);
+    noteHash.put(Utils.ACCOUNT_ID, accountId);
+    noteHash.put(Utils.NAME, name);
 
     firestore.collection("notes").add(noteHash).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
       @Override

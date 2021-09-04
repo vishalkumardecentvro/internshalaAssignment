@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -162,10 +163,11 @@ public class NotesFragment extends Fragment {
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     String accountId = authSharedPref.getString(Utils.ACCOUNT_ID,"");
 
-    firestore.collection("notes").whereEqualTo("accountId",accountId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    firestore.collection("notes").whereEqualTo(Utils.ACCOUNT_ID,accountId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
       @Override
       public void onComplete(@NonNull Task<QuerySnapshot> task) {
         noteList = new ArrayList<>();
+        Log.i("--size--", String.valueOf(task.getResult().size()));
 
         for (QueryDocumentSnapshot document : task.getResult()) {
           Notes notes = document.toObject(Notes.class);
