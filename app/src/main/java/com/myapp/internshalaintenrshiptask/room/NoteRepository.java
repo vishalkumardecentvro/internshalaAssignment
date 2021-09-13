@@ -57,4 +57,22 @@ public class NoteRepository {
       return null;
     }
   }
+
+  public void updateNote(NoteEntity noteEntity){
+    new UpdateNote(noteDao).execute(noteEntity);
+  }
+
+  private static class UpdateNote extends AsyncTask<NoteEntity,Void,Void>{
+    private NoteDao noteDao;
+
+    public UpdateNote(NoteDao noteDao) {
+      this.noteDao = noteDao;
+    }
+
+    @Override
+    protected Void doInBackground(NoteEntity... noteEntities) {
+      noteDao.updateNote(noteEntities[0]);
+      return null;
+    }
+  }
 }

@@ -1,10 +1,8 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.room.Room;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.myapp.internshalaintenrshiptask.R;
-import com.myapp.internshalaintenrshiptask.adapter.NotesAdapter;
 import com.myapp.internshalaintenrshiptask.databinding.FragmentCreateNoteBinding;
-import com.myapp.internshalaintenrshiptask.room.Database;
 import com.myapp.internshalaintenrshiptask.room.NoteView;
-import com.myapp.internshalaintenrshiptask.room.dao.NoteDao;
 import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 import com.myapp.internshalaintenrshiptask.utils.Utils;
 
@@ -37,11 +26,11 @@ import java.util.HashMap;
 
 public class CreateNoteFragment extends Fragment {
   private FragmentCreateNoteBinding binding;
-  private FirebaseFirestore firestore;
   private Bundle bundle;
   private boolean editMode = false;
   private FragmentManager fragmentManager;
   private NoteView noteView;
+  private SharedPreferences authSharedPref;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +66,7 @@ public class CreateNoteFragment extends Fragment {
   }
 
   private void initialize() {
-    firestore = FirebaseFirestore.getInstance();
+    authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     noteView = ViewModelProviders.of((FragmentActivity) getContext()).get(NoteView.class);
 
     if (editMode) {
@@ -120,9 +109,6 @@ public class CreateNoteFragment extends Fragment {
   }
 
   private void saveNote() {
-    SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-    String name = authSharedPref.getString(Utils.NAME, "");
-    String accountId = authSharedPref.getString(Utils.ACCOUNT_ID, "");
 
     NoteEntity noteEntity = new NoteEntity();
     noteEntity.setNotes(binding.tilNotes.getEditText().getText().toString());
@@ -130,25 +116,6 @@ public class CreateNoteFragment extends Fragment {
     noteEntity.setName(authSharedPref.getString(Utils.NAME, ""));
 
     noteView.insertNote(noteEntity);
-
-    HashMap<String, String> noteHash = new HashMap();
-    noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
-    noteHash.put(Utils.ACCOUNT_ID, accountId);
-    noteHash.put(Utils.NAME, name);
-
-    firestore.collection("notes").add(noteHash).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-      @Override
-      public void onSuccess(DocumentReference documentReference) {
-        binding.tilNotes.getEditText().setText("");
-        Toast.makeText(getContext(), "Note saved.", Toast.LENGTH_SHORT).show();
-
-      }
-    }).addOnFailureListener(new OnFailureListener() {
-      @Override
-      public void onFailure(@NonNull Exception e) {
-        Toast.makeText(getContext(), "Failed to save note!", Toast.LENGTH_SHORT).show();
-      }
-    });
 
   }
 
@@ -164,20 +131,17 @@ public class CreateNoteFragment extends Fragment {
     HashMap<String, Object> noteHash = new HashMap();
     noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
 
-    firestore.collection("notes").document(bundle.getString("id")).update(noteHash).addOnSuccessListener(new OnSuccessListener<Void>() {
-      @Override
-      public void onSuccess(Void unused) {
-        Toast.makeText(getContext(), "Note updated.", Toast.LENGTH_SHORT).show();
-      }
-    }).addOnFailureListener(new OnFailureListener() {
-      @Override
-      public void onFailure(@NonNull Exception e) {
-        Toast.makeText(getContext(), "Failed to update note!", Toast.LENGTH_SHORT).show();
-      }
-    });
+    NoteEntity noteEntity = new NoteEntity();
+    noteEntity.setNotes(binding.tilNotes.getEditText().getText().toString());
+    noteEntity.setId(bundle.getInt("id"));
+    noteEntity.setAccountId(authSharedPref.getString(Utils.ACCOUNT_ID, ""));
+    noteEntity.setName(authSharedPref.getString(Utils.NAME, ""));
+
+
+    noteView.updateNote(noteEntity);
   }
 
-  private void navigateToNotesFragment(){
+  private void navigateToNotesFragment() {
 //    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //    fragmentManager.popBackStack();
 

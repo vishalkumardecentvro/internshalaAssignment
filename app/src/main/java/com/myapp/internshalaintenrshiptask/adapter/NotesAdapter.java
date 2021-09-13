@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.myapp.internshalaintenrshiptask.databinding.RvNotesBinding;
-import com.myapp.internshalaintenrshiptask.modalclass.Notes;
 import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 
 import java.util.ArrayList;
