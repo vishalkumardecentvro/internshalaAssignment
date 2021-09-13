@@ -90,8 +90,6 @@ public class CreateNoteFragment extends Fragment {
           processUpdateNote();
         else
           processSaveNote();
-
-        navigateToNotesFragment();
       }
     });
   }
@@ -104,8 +102,10 @@ public class CreateNoteFragment extends Fragment {
     if (binding.tilNotes.getEditText().getText().toString().trim().isEmpty()) {
       Toast.makeText(getContext(), "Please enter note body", Toast.LENGTH_SHORT).show();
       return;
-    } else
+    } else {
       saveNote();
+      navigateToNotesFragment();
+    }
   }
 
   private void saveNote() {
@@ -123,13 +123,13 @@ public class CreateNoteFragment extends Fragment {
     if (binding.tilNotes.getEditText().getText().toString().trim().isEmpty()) {
       Toast.makeText(getContext(), "Please enter note body!", Toast.LENGTH_SHORT).show();
       return;
-    } else
+    } else {
       updateNote();
+      navigateToNotesFragment();
+    }
   }
 
   private void updateNote() {
-    HashMap<String, Object> noteHash = new HashMap();
-    noteHash.put("content", binding.tilNotes.getEditText().getText().toString());
 
     NoteEntity noteEntity = new NoteEntity();
     noteEntity.setNotes(binding.tilNotes.getEditText().getText().toString());
@@ -137,13 +137,10 @@ public class CreateNoteFragment extends Fragment {
     noteEntity.setAccountId(authSharedPref.getString(Utils.ACCOUNT_ID, ""));
     noteEntity.setName(authSharedPref.getString(Utils.NAME, ""));
 
-
     noteView.updateNote(noteEntity);
   }
 
   private void navigateToNotesFragment() {
-//    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//    fragmentManager.popBackStack();
 
     fragmentManager = getActivity().getSupportFragmentManager();
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

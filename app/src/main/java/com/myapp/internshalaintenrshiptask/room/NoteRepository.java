@@ -75,4 +75,25 @@ public class NoteRepository {
       return null;
     }
   }
+
+  public void deleteAllNotes(String accountId){
+    new DeleteAllNotes(accountId,noteDao).execute();
+
+  }
+
+  private static class DeleteAllNotes extends AsyncTask<Void,Void,Void>{
+    private String accountId;
+    private NoteDao noteDao;
+
+    public DeleteAllNotes(String accountId, NoteDao noteDao) {
+      this.accountId = accountId;
+      this.noteDao = noteDao;
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+      noteDao.deleteAllNotes(accountId);
+      return null;
+    }
+  }
 }

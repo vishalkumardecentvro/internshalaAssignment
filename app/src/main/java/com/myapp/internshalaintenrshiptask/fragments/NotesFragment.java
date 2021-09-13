@@ -1,6 +1,9 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +29,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.myapp.internshalaintenrshiptask.R;
 import com.myapp.internshalaintenrshiptask.activity.MainActivity;
 import com.myapp.internshalaintenrshiptask.adapter.NotesAdapter;
@@ -33,6 +38,7 @@ import com.myapp.internshalaintenrshiptask.room.NoteView;
 import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 import com.myapp.internshalaintenrshiptask.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotesFragment extends Fragment {
@@ -43,6 +49,7 @@ public class NotesFragment extends Fragment {
   private GoogleSignInOptions gso;
   private NoteView noteView;
   private List<NoteEntity> noteListEntity;
+  private SharedPreferences authSharedPref;
 
 
   @Override
@@ -61,6 +68,9 @@ public class NotesFragment extends Fragment {
     switch (item.getItemId()) {
       case R.id.logOut:
         logout();
+        break;
+      case R.id.deleteAll:
+        processDeleteAllNotes();
         break;
     }
     return super.onOptionsItemSelected(item);
@@ -109,6 +119,7 @@ public class NotesFragment extends Fragment {
   }
 
   private void initialize() {
+    authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     binding.rvNotes.setAdapter(notesAdapter);
 
   }
@@ -152,7 +163,6 @@ public class NotesFragment extends Fragment {
   }
 
   private void load() {
-    SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     String accountId = authSharedPref.getString(Utils.ACCOUNT_ID, "");
 
     noteView.getAllNotes(accountId).observe(getViewLifecycleOwner(), new Observer<List<NoteEntity>>() {
@@ -167,6 +177,8 @@ public class NotesFragment extends Fragment {
           noteListEntity = noteEntities;
           notesAdapter.setNotesList(noteEntities);
         }
+        else
+          notesAdapter.setNotesList(new ArrayList<>());
       }
     });
 
@@ -196,6 +208,28 @@ public class NotesFragment extends Fragment {
         startActivity(new Intent(getContext(), MainActivity.class));
       }
     });
+  }
+
+  private void processDeleteAllNotes(){
+    new MaterialAlertDialogBuilder(getContext())
+            .setTitle("Delete all notes?")
+            .setMessage("Once notes deleted cannot be undone!")
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getContext(),"OK",Toast.LENGTH_SHORT).show();
+              }
+            }).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialogInterface, int i) {
+        deleteAllNotes();
+      }
+    }).show();
+  }
+
+  private void deleteAllNotes(){
+    noteView.deleteAllNotes(authSharedPref.getString(Utils.ACCOUNT_ID, ""));
+    load();
   }
 
 }

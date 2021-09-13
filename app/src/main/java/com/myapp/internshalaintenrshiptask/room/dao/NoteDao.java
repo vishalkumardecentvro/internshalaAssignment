@@ -24,7 +24,7 @@ public interface NoteDao {
   void updateNote(NoteEntity noteEntity);
 
   @Query("delete from Notes where accountId = :accountId  ")
-  void deleteAllNotes(int accountId);
+  void deleteAllNotes(String accountId);
 
   @Query("select * from Notes where accountId = :accountId order by id asc")
   LiveData<List<NoteEntity>> getAllNotes(String accountId);

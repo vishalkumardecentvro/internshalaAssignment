@@ -33,4 +33,8 @@ public class NoteView extends AndroidViewModel {
   public void updateNote(NoteEntity noteEntity){
     noteRepository.updateNote(noteEntity);
   }
+
+  public void deleteAllNotes(String accountId){
+    noteRepository.deleteAllNotes(accountId);
+  }
 }
