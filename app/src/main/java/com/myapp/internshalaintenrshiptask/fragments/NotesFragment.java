@@ -1,7 +1,5 @@
 package com.myapp.internshalaintenrshiptask.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,6 +73,8 @@ public class NotesFragment extends Fragment {
     }
     return super.onOptionsItemSelected(item);
   }
+
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
