@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.myapp.internshalaintenrshiptask.databinding.RvNotesBinding;
 import com.myapp.internshalaintenrshiptask.modalclass.Notes;
+import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
   public onNoteClick noteClickListener;
-  private List<Notes> notesList = new ArrayList<>();
+  private List<NoteEntity> notesList = new ArrayList<>();
 
   public void setOnNoteClick(onNoteClick noteClick) {
     noteClickListener = noteClick;
@@ -37,7 +38,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     return notesList.size();
   }
 
-  public void setNotesList(List<Notes> notesList) {
+  public void setNotesList(List<NoteEntity> notesList) {
     this.notesList = notesList;
     notifyDataSetChanged();
   }
@@ -81,7 +82,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     }
 
     private void populate(int position) {
-      binding.tvNoteContent.setText(notesList.get(position).getContent());
+      binding.tvNoteContent.setText(notesList.get(position).getNotes());
     }
   }
 

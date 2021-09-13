@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    def room_version = "2.3.0"
+    def lifecycle_version = "2.3.1"
 
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.4.0'
@@ -42,6 +44,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-firestore:23.0.3'
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version" // ViewModel
+    implementation "android.arch.lifecycle:extensions:1.1.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version" // LiveData
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version" // Annotation processor
+    implementation "androidx.room:room-runtime:$room_version" // Room
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

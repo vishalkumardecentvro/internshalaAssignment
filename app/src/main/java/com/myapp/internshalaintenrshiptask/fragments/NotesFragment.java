@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,8 +16,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,11 +38,12 @@ import com.myapp.internshalaintenrshiptask.activity.MainActivity;
 import com.myapp.internshalaintenrshiptask.adapter.NotesAdapter;
 import com.myapp.internshalaintenrshiptask.databinding.FragmentNotesBinding;
 import com.myapp.internshalaintenrshiptask.modalclass.Notes;
+import com.myapp.internshalaintenrshiptask.room.NoteView;
+import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 import com.myapp.internshalaintenrshiptask.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class NotesFragment extends Fragment {
   private FragmentNotesBinding binding;
@@ -47,6 +53,8 @@ public class NotesFragment extends Fragment {
   private CreateNoteFragment createNoteFragment;
   private GoogleSignInClient googleSignInClient;
   private GoogleSignInOptions gso;
+  private NoteView noteView;
+  private List<NoteEntity> noteListEntity;
 
 
   @Override
@@ -96,6 +104,8 @@ public class NotesFragment extends Fragment {
   private void instantiate() {
     getActivity().setTitle("Notes");
 
+    noteView = ViewModelProviders.of((FragmentActivity) getContext()).get(NoteView.class);
+
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     String name = authSharedPref.getString(Utils.NAME, "");
     binding.tvName.setText(name);
@@ -141,21 +151,12 @@ public class NotesFragment extends Fragment {
 
       @Override
       public void deleteNote(int position) {
-        Notes notes = new Notes();
-        notes = noteList.get(position);
+        NoteEntity note = new NoteEntity();
 
-        firestore.collection("notes").document(notes.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-          @Override
-          public void onSuccess(Void unused) {
-            Toast.makeText(getContext(), "Note deleted", Toast.LENGTH_SHORT).show();
-            load();
-          }
-        }).addOnFailureListener(new OnFailureListener() {
-          @Override
-          public void onFailure(@NonNull Exception e) {
-            Toast.makeText(getContext(), "Failed to delete note", Toast.LENGTH_SHORT).show();
-          }
-        });
+        if(!noteListEntity.isEmpty()){
+          note = noteListEntity.get(position);
+          noteView.deleteNote(note);
+        }
       }
     });
   }
@@ -163,6 +164,23 @@ public class NotesFragment extends Fragment {
   private void load() {
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
     String accountId = authSharedPref.getString(Utils.ACCOUNT_ID, "");
+    Log.i("--noteAccount--", accountId);
+
+    noteView.getAllNotes(accountId).observe(getViewLifecycleOwner(), new Observer<List<NoteEntity>>() {
+      @Override
+      public void onChanged(List<NoteEntity> noteEntities) {
+        if (noteEntities.size() != 0)
+          binding.tvEmptyList.setVisibility(View.GONE);
+        else
+          binding.tvEmptyList.setVisibility(View.VISIBLE);
+
+        if (!(noteEntities.isEmpty())) {
+          noteListEntity = noteEntities;
+          notesAdapter.setNotesList(noteEntities);
+        }
+      }
+    });
+
 
     firestore.collection("notes").whereEqualTo(Utils.ACCOUNT_ID, accountId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
       @Override
@@ -183,7 +201,7 @@ public class NotesFragment extends Fragment {
 
           noteList.add(notesObject);
         }
-        notesAdapter.setNotesList(noteList);
+        //notesAdapter.setNotesList(noteList);
       }
     }).addOnFailureListener(new OnFailureListener() {
       @Override
