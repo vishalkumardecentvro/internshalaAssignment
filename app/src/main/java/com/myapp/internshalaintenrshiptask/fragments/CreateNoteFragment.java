@@ -12,11 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.myapp.internshalaintenrshiptask.R;
+import com.myapp.internshalaintenrshiptask.adapter.NotesAdapter;
 import com.myapp.internshalaintenrshiptask.databinding.FragmentCreateNoteBinding;
 import com.myapp.internshalaintenrshiptask.utils.Utils;
 
@@ -27,6 +30,7 @@ public class CreateNoteFragment extends Fragment {
   private FirebaseFirestore firestore;
   private Bundle bundle;
   private boolean editMode = false;
+  private FragmentManager fragmentManager;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -85,6 +89,8 @@ public class CreateNoteFragment extends Fragment {
           processUpdateNote();
         else
           processSaveNote();
+
+        navigateToNotesFragment();
       }
     });
   }
@@ -150,6 +156,16 @@ public class CreateNoteFragment extends Fragment {
         Toast.makeText(getContext(), "Failed to update note!", Toast.LENGTH_SHORT).show();
       }
     });
+  }
 
+  private void navigateToNotesFragment(){
+//    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//    fragmentManager.popBackStack();
+
+    fragmentManager = getActivity().getSupportFragmentManager();
+    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    fragmentTransaction.replace(R.id.nav_host_fragment, new NotesFragment());
+    fragmentTransaction.addToBackStack(null);
+    fragmentTransaction.commit();
   }
 }

@@ -21,12 +21,12 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:layout_margin="5dp"
-      android:textColor="@color/black"
       android:layout_weight="1"
       android:padding="5dp"
       android:text="Create "
-      android:textStyle="bold"
-      android:textSize="16sp" />
+      android:textColor="@color/black"
+      android:textSize="16sp"
+      android:textStyle="bold" />
 
     <Button
       android:id="@+id/createNoteButton"
@@ -47,5 +47,19 @@
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:reverseLayout="false"
     tools:listitem="@layout/rv_notes" />
+
+  <TextView
+    android:id="@+id/tvEmptyList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:background="@color/design_default_color_error"
+    android:gravity="center"
+    android:padding="10dp"
+    android:text="Note list empty!"
+    android:textColor="@color/white"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    android:visibility="visible" />
 
 </RelativeLayout>

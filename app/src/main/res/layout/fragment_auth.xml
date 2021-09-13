@@ -8,32 +8,27 @@
 
   <ImageView
     android:layout_width="175dp"
+    android:layout_height="175dp"
     android:layout_centerHorizontal="true"
     android:layout_margin="20dp"
-    android:src="@drawable/internshala_image"
-    android:layout_height="175dp"/>
+    android:src="@drawable/internshala_image" />
 
-  <androidx.cardview.widget.CardView
+  <TextView
+    android:id="@+id/tvSignInText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@id/sign_in_button"
-    android:layout_margin="10dp">
-
-      <TextView
-        android:id="@+id/tvSignInText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Internship assignment"
-        android:textAllCaps="true"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-  </androidx.cardview.widget.CardView>
+    android:layout_gravity="center"
+    android:layout_margin="10dp"
+    android:layout_weight="1"
+    android:background="@color/white"
+    android:gravity="center"
+    android:padding="10dp"
+    android:text="Internship assignment"
+    android:textAllCaps="true"
+    android:textColor="@color/black"
+    android:textSize="20sp"
+    android:textStyle="bold" />
 
   <com.google.android.gms.common.SignInButton
     android:id="@+id/sign_in_button"

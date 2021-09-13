@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +37,7 @@ import com.myapp.internshalaintenrshiptask.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NotesFragment extends Fragment {
   private FragmentNotesBinding binding;
@@ -57,12 +57,12 @@ public class NotesFragment extends Fragment {
 
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-    getActivity().getMenuInflater().inflate(R.menu.log_out_menu,menu);
+    getActivity().getMenuInflater().inflate(R.menu.log_out_menu, menu);
   }
 
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    switch(item.getItemId()){
+    switch (item.getItemId()) {
       case R.id.logOut:
         logout();
         break;
@@ -80,6 +80,7 @@ public class NotesFragment extends Fragment {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
     instantiate();
     initialize();
     listen();
@@ -161,13 +162,17 @@ public class NotesFragment extends Fragment {
 
   private void load() {
     SharedPreferences authSharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-    String accountId = authSharedPref.getString(Utils.ACCOUNT_ID,"");
+    String accountId = authSharedPref.getString(Utils.ACCOUNT_ID, "");
 
-    firestore.collection("notes").whereEqualTo(Utils.ACCOUNT_ID,accountId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    firestore.collection("notes").whereEqualTo(Utils.ACCOUNT_ID, accountId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
       @Override
       public void onComplete(@NonNull Task<QuerySnapshot> task) {
+        if (task.getResult().size() != 0)
+          binding.tvEmptyList.setVisibility(View.GONE);
+        else
+          binding.tvEmptyList.setVisibility(View.VISIBLE);
+
         noteList = new ArrayList<>();
-        Log.i("--size--", String.valueOf(task.getResult().size()));
 
         for (QueryDocumentSnapshot document : task.getResult()) {
           Notes notes = document.toObject(Notes.class);
@@ -202,7 +207,7 @@ public class NotesFragment extends Fragment {
     fragmentTransaction.commit();
   }
 
-  private void logout(){
+  private void logout() {
     googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
       @Override
       public void onComplete(@NonNull Task<Void> task) {
@@ -214,4 +219,5 @@ public class NotesFragment extends Fragment {
       }
     });
   }
+
 }
