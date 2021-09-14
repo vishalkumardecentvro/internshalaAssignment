@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +31,7 @@ import com.myapp.internshalaintenrshiptask.R;
 import com.myapp.internshalaintenrshiptask.activity.MainActivity;
 import com.myapp.internshalaintenrshiptask.adapter.NotesAdapter;
 import com.myapp.internshalaintenrshiptask.databinding.FragmentNotesBinding;
-import com.myapp.internshalaintenrshiptask.room.NoteView;
+import com.myapp.internshalaintenrshiptask.room.viewmodel.NoteView;
 import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 import com.myapp.internshalaintenrshiptask.utils.Utils;
 
@@ -73,8 +72,6 @@ public class NotesFragment extends Fragment {
     }
     return super.onOptionsItemSelected(item);
   }
-
-
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -217,7 +214,6 @@ public class NotesFragment extends Fragment {
             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(getContext(),"OK",Toast.LENGTH_SHORT).show();
               }
             }).setPositiveButton("Delete", new DialogInterface.OnClickListener() {
       @Override

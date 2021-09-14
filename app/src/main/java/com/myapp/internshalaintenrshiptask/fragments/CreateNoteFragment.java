@@ -13,16 +13,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.myapp.internshalaintenrshiptask.R;
 import com.myapp.internshalaintenrshiptask.databinding.FragmentCreateNoteBinding;
-import com.myapp.internshalaintenrshiptask.room.NoteView;
+import com.myapp.internshalaintenrshiptask.room.viewmodel.NoteView;
 import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 import com.myapp.internshalaintenrshiptask.utils.Utils;
-
-import java.util.HashMap;
 
 public class CreateNoteFragment extends Fragment {
   private FragmentCreateNoteBinding binding;
@@ -104,7 +100,7 @@ public class CreateNoteFragment extends Fragment {
       return;
     } else {
       saveNote();
-      navigateToNotesFragment();
+      popBack();
     }
   }
 
@@ -125,7 +121,7 @@ public class CreateNoteFragment extends Fragment {
       return;
     } else {
       updateNote();
-      navigateToNotesFragment();
+      popBack();
     }
   }
 
@@ -140,12 +136,8 @@ public class CreateNoteFragment extends Fragment {
     noteView.updateNote(noteEntity);
   }
 
-  private void navigateToNotesFragment() {
-
-    fragmentManager = getActivity().getSupportFragmentManager();
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    fragmentTransaction.replace(R.id.nav_host_fragment, new NotesFragment());
-    fragmentTransaction.addToBackStack(null);
-    fragmentTransaction.commit();
+  private void popBack() {
+    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+    fragmentManager.popBackStack();
   }
 }

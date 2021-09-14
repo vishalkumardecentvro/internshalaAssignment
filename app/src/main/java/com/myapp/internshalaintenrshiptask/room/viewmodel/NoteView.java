@@ -1,4 +1,4 @@
-package com.myapp.internshalaintenrshiptask.room;
+package com.myapp.internshalaintenrshiptask.room.viewmodel;
 
 import android.app.Application;
 
@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
+import com.myapp.internshalaintenrshiptask.room.repository.NoteRepository;
 
 import java.util.List;
 

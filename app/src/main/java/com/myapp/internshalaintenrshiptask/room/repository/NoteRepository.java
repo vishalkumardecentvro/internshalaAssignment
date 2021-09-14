@@ -1,10 +1,11 @@
-package com.myapp.internshalaintenrshiptask.room;
+package com.myapp.internshalaintenrshiptask.room.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import com.myapp.internshalaintenrshiptask.room.Database;
 import com.myapp.internshalaintenrshiptask.room.dao.NoteDao;
 import com.myapp.internshalaintenrshiptask.room.entity.NoteEntity;
 
